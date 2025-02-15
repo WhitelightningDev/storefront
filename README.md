@@ -1,4 +1,4 @@
-# E-Commerce Store
+# E-Commerce Store - GoShop
 
 An online shopping platform that allows users to browse and purchase products, view product details, manage their cart, and proceed to checkout. This app is built using **React** and **React-Bootstrap** for UI components, with a **Fake Store API** to fetch product data.
 
@@ -10,7 +10,7 @@ An online shopping platform that allows users to browse and purchase products, v
 - **Product Details**: Users can view detailed information about a product, including title, description, price, and image.
 - **Cart Management**: Users can add products to the cart, view quantities, and remove items. If a user adds more than one of the same product, the quantity is tracked.
 - **Checkout**: Users can proceed to checkout and view a summary of their order.
-- **Responsive Design**: The app is responsive, providing a good user experience across devices.
+- **Responsive Design**: The app is responsive, providing a good user experience across devices, scaling well on all device screens.
 
 ---
 
