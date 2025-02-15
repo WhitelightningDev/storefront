@@ -17,7 +17,7 @@ const CustomNavbar = () => {
           height="50"
           className="d-inline-block align-top"
         />
-        <span className="brand-name">ShopSphere</span>
+        <span className="brand-name">GoShop</span>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="navbar-nav" />
       <Navbar.Collapse id="navbar-nav">
