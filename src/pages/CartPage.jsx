@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom';
 import '../styles/CartPage.css'; // Ensure you create this CSS file
 
 const CartPage = () => {
-  const { cart, removeFromCart } = useCart();
+  const { cart, addToCart, removeFromCart } = useCart();
 
   // Calculate total price
-  const totalAmount = cart.reduce((acc, product) => acc + product.price, 0).toFixed(2);
+  const totalAmount = cart
+    .reduce((acc, product) => acc + product.price * product.quantity, 0)
+    .toFixed(2);
 
   return (
     <div className="container cart-container">
@@ -33,9 +35,19 @@ const CartPage = () => {
                   <Col xs={6}>
                     <h5 className="cart-item-title">{product.title}</h5>
                     <p className="cart-item-price">${product.price.toFixed(2)}</p>
+                    <p className="cart-item-quantity">
+                      Quantity: {product.quantity}
+                    </p>
                   </Col>
                   <Col xs={3} className="text-right">
-                    <Button variant="outline-danger" size="sm" onClick={() => removeFromCart(product.id)}>Remove</Button>
+                    <div className="quantity-controls">
+                      <Button variant="outline-secondary" size="sm" onClick={() => removeFromCart(product.id)}>-</Button>
+                      <span className="mx-2">{product.quantity}</span>
+                      <Button variant="outline-primary" size="sm" onClick={() => addToCart(product)}>+</Button>
+                    </div>
+                    <Button variant="outline-danger" size="sm" onClick={() => removeFromCart(product.id)}>
+                      Remove
+                    </Button>
                   </Col>
                 </Row>
               </Card>
