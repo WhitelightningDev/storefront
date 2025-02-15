@@ -1,0 +1,44 @@
+/* Ensure the product card stretches to the same height */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between; /* Ensures button stays at the bottom */
+  }
+  
+  .card-img {
+    width: 100%;
+    height: 200px; /* Adjust height as needed */
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Keeps content consistent */
+    height: 100%;
+  }
+  
+  .card-body .btn {
+    margin-top: auto; /* Ensure the button stays at the bottom */
+  }
+  
+  .sidebar {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Custom styles to change carousel arrow color */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: black !important; /* Make arrows black */
+}
+
+  /* src/styles/Home.css (or your custom stylesheet) */
+.carousel-caption h5,
+.carousel-caption p {
+  color: rgb(0, 0, 0);
+}
