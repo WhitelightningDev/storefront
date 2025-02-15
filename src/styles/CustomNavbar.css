@@ -1,0 +1,44 @@
+/* src/styles/CustomNavbar.css */
+.custom-navbar {
+  position: sticky;
+  top: 0; /* Ensures it sticks to the top */
+  z-index: 1020; /* Ensures it's above other content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for a more polished look */
+  padding: 10px 20px;
+  background-color: #343a40; /* Make sure the background color is solid */
+}
+
+.brand-logo img {
+  border-radius: 50%;
+}
+
+.brand-name {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-left: 10px;
+}
+
+.cart-link {
+  position: relative;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.cart-link:hover {
+  color: #f8c146; /* Gold color for hover effect */
+}
+
+.cart-badge {
+  font-size: 1rem;
+  margin-left: 5px;
+  background-color: #f8c146;
+  color: #333;
+}
+
+/* Optional: Adjust navbar behavior on smaller screens */
+@media (max-width: 768px) {
+  .custom-navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
