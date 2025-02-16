@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button, Row, Col, Form, Container } from "react-bootstrap";
-import { useCart } from "../context/CartContext"; // Import the Cart context
+import { Card, Button, Row, Col, Form, Container, Toast, ToastContainer } from "react-bootstrap";
+import { useCart } from "../context/CartContext"; // Import Cart context
+import { useWishlist } from "../context/WishlistContext"; // Import Wishlist context
+import { FaHeart, FaRegHeart } from "react-icons/fa"; // Wishlist Icons
 import "../styles/Home.css";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const { addToCart } = useCart(); // Access the addToCart function
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const { addToCart } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   useEffect(() => {
     // Fetch Categories
@@ -23,26 +28,42 @@ const Home = () => {
     // Fetch Products based on selected category
     const fetchProducts = async () => {
       const categoryQuery = selectedCategory ? `category/${selectedCategory}` : "";
-      const response = await fetch(
-        `https://fakestoreapi.com/products${categoryQuery ? `/${categoryQuery}` : ""}`
-      );
+      const response = await fetch(`https://fakestoreapi.com/products${categoryQuery ? `/${categoryQuery}` : ""}`);
       const data = await response.json();
       setProducts(data);
     };
-
     fetchProducts();
-  }, [selectedCategory]); // Fetch products every time category changes
+  }, [selectedCategory]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
 
-  // Select best sellers (first 5 products as an example)
+  // Wishlist Functionality
+  const toggleWishlist = (product) => {
+    if (wishlist.some((item) => item.id === product.id)) {
+      removeFromWishlist(product.id);
+      setToastMessage(`${product.title} removed from wishlist`);
+    } else {
+      addToWishlist(product);
+      setToastMessage(`${product.title} added to wishlist`);
+    }
+    setShowToast(true);
+  };
+
+  // Best Sellers (First 5 Products)
   const bestSellers = products.slice(0, 5);
 
   return (
     <Container className="mt-4">
-      {/* Carousel showcasing best sellers */}
+      {/* Toast Notification */}
+      <ToastContainer position="top-end" className="p-3">
+        <Toast onClose={() => setShowToast(false)} show={showToast} delay={2000} autohide bg="success">
+          <Toast.Body>{toastMessage}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+
+      {/* Carousel for Best Sellers */}
       <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
         <div className="carousel-indicators">
           {bestSellers.map((_, index) => (
@@ -52,30 +73,29 @@ const Home = () => {
               data-bs-slide-to={index}
               className={index === 0 ? "active" : ""}
               aria-current={index === 0 ? "true" : "false"}
-              aria-label={`Slide ${index + 1}`}  // Fixed this line
+              aria-label={`Slide ${index + 1}`}
               key={index}
             ></button>
           ))}
         </div>
         <div className="carousel-inner">
           {bestSellers.map((product, index) => (
-            <div
-              key={product.id}
-              className={`carousel-item ${index === 0 ? "active" : ""}`} // Fixed this line
-            >
+            <div key={product.id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
               <img
                 className="d-block w-100"
                 src={product.image}
                 alt={product.title}
                 style={{ height: "400px", objectFit: "contain" }}
               />
-              <div className="carousel-caption d-none d-md-block custom-caption">
+              <div className="carousel-caption d-none d-md-block">
                 <Card className="shadow-sm">
                   <Card.Body>
                     <Card.Title>{product.title}</Card.Title>
                     <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
-                    <Button variant="primary" onClick={() => addToCart(product)}>
-                      Add to Cart
+                    <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
+                    {/* Wishlist Button Inside Carousel */}
+                    <Button variant="outline-danger" className="wishlist-btn ms-2" onClick={() => toggleWishlist(product)}>
+                      {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
                     </Button>
                   </Card.Body>
                 </Card>
@@ -83,32 +103,23 @@ const Home = () => {
             </div>
           ))}
         </div>
-        <button
-          className="carousel-control-prev"
-          type="button"
-          data-bs-target="#myCarousel"
-          data-bs-slide="prev"
-        >
+        <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
           <span className="carousel-control-prev-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Previous</span>
         </button>
-        <button
-          className="carousel-control-next"
-          type="button"
-          data-bs-target="#myCarousel"
-          data-bs-slide="next"
-        >
+        <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
           <span className="carousel-control-next-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Next</span>
         </button>
       </div>
+
       <Row>
-        {/* Sidebar for filtering categories */}
+        {/* Sidebar for Filtering Categories */}
         <Col md={3} className="mb-4 mt-3">
-          <div className="border p-3 rounded sidebar">
+          <div className="sidebar">
             <h4>Filter by Category</h4>
             <Form.Group controlId="categorySelect">
-              <Form.Control as="select" onChange={handleCategoryChange} className="mb-3">
+              <Form.Control as="select" onChange={handleCategoryChange}>
                 <option value="">All Categories</option>
                 {categories.map((category) => (
                   <option key={category} value={category}>
@@ -130,11 +141,16 @@ const Home = () => {
                     <Card.Img className="card-img" variant="top" src={product.image} />
                     <Card.Body className="d-flex flex-column">
                       <Card.Title className="product-title">{product.title}</Card.Title>
-                      <div className="mt-auto">
-                        <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
-                        <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
-                        <Button variant="link" onClick={() => (window.location.href = `/product/${product.id}`)}>View Details</Button>
-                      </div>
+                      <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
+
+                      {/* Wishlist Button */}
+                      <Button variant="outline-danger" className="wishlist-btn mb-2" onClick={() => toggleWishlist(product)}>
+                        {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
+                      </Button>
+
+                      {/* Add to Cart & View Details */}
+                      <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
+                      <Button variant="link" onClick={() => (window.location.href = `/product/${product.id}`)}>View Description</Button>
                     </Card.Body>
                   </Card>
                 </Col>
