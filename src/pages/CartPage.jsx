@@ -35,9 +35,7 @@ const CartPage = () => {
                   <Col xs={6}>
                     <h5 className="cart-item-title">{product.title}</h5>
                     <p className="cart-item-price">${product.price.toFixed(2)}</p>
-                    <p className="cart-item-quantity">
-                      Quantity: {product.quantity}
-                    </p>
+                    <p className="cart-item-quantity">Quantity: {product.quantity}</p>
                   </Col>
                   <Col xs={3} className="text-end">
                     <div className="quantity-controls">

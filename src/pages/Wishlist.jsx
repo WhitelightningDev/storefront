@@ -9,6 +9,12 @@ const Wishlist = () => {
   const { wishlist, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
 
+  // Modified addToCart function to remove item from wishlist after adding to cart
+  const handleAddToCart = (product) => {
+    addToCart(product);  // Add product to cart
+    removeFromWishlist(product.id);  // Remove product from wishlist
+  };
+
   return (
     <Container className="wishlist-container">
       <h2 className="wishlist-title">Your Wishlist</h2>
@@ -28,7 +34,7 @@ const Wishlist = () => {
                   <div className="wishlist-buttons">
                     <Button
                       variant="primary"
-                      onClick={() => addToCart(product)}
+                      onClick={() => handleAddToCart(product)}  // Call handleAddToCart
                       className="wishlist-cart-btn"
                     >
                       <FaShoppingCart /> Add to Cart

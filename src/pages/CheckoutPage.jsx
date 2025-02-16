@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "../styles/CheckoutPage.css"; // Ensure to create this CSS file
 
 const CheckoutPage = () => {
-  const { cart, removeFromCart } = useCart();
+  const { cart, removeFromCart, clearCart } = useCart(); // Added clearCart from context
   const [showCheckoutForm, setShowCheckoutForm] = useState(false); // state to toggle the checkout form
   const [showSuccessPage, setShowSuccessPage] = useState(false); // state to show the success page after order is complete
 
@@ -25,8 +25,9 @@ const CheckoutPage = () => {
     if (e.target.checkValidity() === false) {
       e.stopPropagation(); // Prevent form submission if validation fails
     } else {
-      // If the form is valid, show the success page
+      // If the form is valid, show the success page and clear the cart
       setShowSuccessPage(true);
+      clearCart(); // This will clear the cart after a successful purchase
     }
 
     // Mark the form as touched to show validation messages
@@ -330,11 +331,13 @@ const CheckoutPage = () => {
                     </div>
                   </div>
 
+                  <hr className="my-4" />
+
                   <button
                     className="w-100 btn btn-primary btn-lg"
                     type="submit"
                   >
-                    Confirm Payment
+                    Complete Purchase
                   </button>
                 </form>
               </div>
