@@ -1,8 +1,10 @@
+// Home.js
 import React, { useEffect, useState } from "react";
 import { Card, Button, Row, Col, Form, Container, Toast, ToastContainer } from "react-bootstrap";
 import { useCart } from "../context/CartContext"; // Import Cart context
 import { useWishlist } from "../context/WishlistContext"; // Import Wishlist context
 import { FaHeart, FaRegHeart } from "react-icons/fa"; // Wishlist Icons
+import { fetchCategories, fetchProducts } from "../services/api"; // Import API functions
 import "../styles/Home.css";
 
 const Home = () => {
@@ -14,25 +16,30 @@ const Home = () => {
   const { addToCart } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
+  // Fetch Categories
   useEffect(() => {
-    // Fetch Categories
-    const fetchCategories = async () => {
-      const response = await fetch("https://fakestoreapi.com/products/categories");
-      const data = await response.json();
-      setCategories(data);
+    const fetchCategoryData = async () => {
+      try {
+        const data = await fetchCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     };
-    fetchCategories();
+    fetchCategoryData();
   }, []);
 
+  // Fetch Products based on selected category
   useEffect(() => {
-    // Fetch Products based on selected category
-    const fetchProducts = async () => {
-      const categoryQuery = selectedCategory ? `category/${selectedCategory}` : "";
-      const response = await fetch(`https://fakestoreapi.com/products${categoryQuery ? `/${categoryQuery}` : ""}`);
-      const data = await response.json();
-      setProducts(data);
+    const fetchProductData = async () => {
+      try {
+        const data = await fetchProducts(selectedCategory);
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     };
-    fetchProducts();
+    fetchProductData();
   }, [selectedCategory]);
 
   const handleCategoryChange = (e) => {
@@ -48,7 +55,7 @@ const Home = () => {
       addToWishlist(product);
       setToastMessage(`${product.title} added to wishlist`);
     }
-    setShowToast(true);
+    setShowToast(true); // Show toast notification after updating the wishlist
   };
 
   // Best Sellers (First 5 Products)
@@ -94,7 +101,7 @@ const Home = () => {
                     <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
                     <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
                     {/* Wishlist Button Inside Carousel */}
-                    <Button variant="outline-danger" className="wishlist-btn ms-2" onClick={() => toggleWishlist(product)}>
+                    <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
                       {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
                     </Button>
                   </Card.Body>
