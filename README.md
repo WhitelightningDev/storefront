@@ -18,8 +18,8 @@ An online shopping platform that allows users to browse and purchase products, v
 
 - **React**: The front-end framework used to build the app.
 - **React-Bootstrap**: A library for responsive design and styled components.
-- **Fake Store API**: A free API that provides fake product data for this demo.
-- **React Context API**: For managing the cart state across the app.
+- **Fake Store API**: A free API that provides fake product data for this demo where you can showcase products so that you can see what your site will look like with live data.
+- **React Context API**: For managing the cart state across the application.
 
 ---
 
@@ -129,7 +129,3 @@ Feel free to fork the repository and submit pull requests. For major changes, pl
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-Let me know if you need any changes!
