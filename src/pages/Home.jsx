@@ -42,6 +42,66 @@ const Home = () => {
 
   return (
     <Container className="mt-4">
+      {/* Carousel showcasing best sellers */}
+      <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
+        <div className="carousel-indicators">
+          {bestSellers.map((_, index) => (
+            <button
+              type="button"
+              data-bs-target="#myCarousel"
+              data-bs-slide-to={index}
+              className={index === 0 ? "active" : ""}
+              aria-current={index === 0 ? "true" : "false"}
+              aria-label={`Slide ${index + 1}`}  // Fixed this line
+              key={index}
+            ></button>
+          ))}
+        </div>
+        <div className="carousel-inner">
+          {bestSellers.map((product, index) => (
+            <div
+              key={product.id}
+              className={`carousel-item ${index === 0 ? "active" : ""}`} // Fixed this line
+            >
+              <img
+                className="d-block w-100"
+                src={product.image}
+                alt={product.title}
+                style={{ height: "400px", objectFit: "contain" }}
+              />
+              <div className="carousel-caption d-none d-md-block custom-caption">
+                <Card className="shadow-sm">
+                  <Card.Body>
+                    <Card.Title>{product.title}</Card.Title>
+                    <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
+                    <Button variant="primary" onClick={() => addToCart(product)}>
+                      Add to Cart
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          className="carousel-control-prev"
+          type="button"
+          data-bs-target="#myCarousel"
+          data-bs-slide="prev"
+        >
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Previous</span>
+        </button>
+        <button
+          className="carousel-control-next"
+          type="button"
+          data-bs-target="#myCarousel"
+          data-bs-slide="next"
+        >
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Next</span>
+        </button>
+      </div>
       <Row>
         {/* Sidebar for filtering categories */}
         <Col md={3} className="mb-4 mt-3">
