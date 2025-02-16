@@ -112,7 +112,7 @@ const Home = () => {
           <span className="visually-hidden">Next</span>
         </button>
       </div>
-
+      
       <Row>
         {/* Sidebar for Filtering Categories */}
         <Col md={3} className="mb-4 mt-3">

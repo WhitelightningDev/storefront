@@ -3,55 +3,51 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 400px; /* Ensures a consistent card height */
-  border-radius: 10px;
+  min-height: 250px; /* Further reduced card height */
+  border-radius: 8px; /* Reduced corner radius */
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
+  margin-bottom: 10px; /* Reduced margin */
 }
 
 .product-card:hover {
-  transform: translateY(-5px); /* Elevate the card on hover */
+  transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card-img {
   width: 100%;
-  height: 220px;
+  height: 160px; /* Further reduced image height */
   object-fit: contain;
-  object-position: center;
 }
 
 .product-title {
-  font-size: 1.1rem;
+  font-size: 0.85rem; /* Even smaller font size */
   font-weight: bold;
   color: #333;
-  margin-top: 10px;
-  min-height: 50px; /* Ensure consistent space for title */
-  flex-grow: 1; /* Allow title to take available space */
+  margin-top: 5px; /* Reduced space */
 }
 
 .product-price {
-  font-size: 1.2rem;
+  font-size: 0.9rem; /* Smaller font size */
   font-weight: bold;
-  color: #007bff; /* Blue for price */
-  margin-bottom: 15px;
+  color: #007bff;
+  margin-bottom: 8px;
 }
 
 .card-body {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Aligns all elements at the bottom */
-  padding: 1rem;
+  justify-content: flex-end;
+  padding: 0.5rem; /* Further reduced padding */
   flex-grow: 1;
 }
 
 .card-body .btn {
-  margin-top: 10px;
-  width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  display: block;
+  margin-top: 5px; /* Reduced margin */
+  padding: 8px;
+  font-size: 0.85rem; /* Smaller font size */
 }
 
 .card-body .btn-primary {
@@ -64,13 +60,12 @@
 }
 
 .wishlist-btn {
-  font-size: 0.95rem;
-  padding: 8px 12px;
+  font-size: 0.75rem; /* Even smaller font size */
+  padding: 6px 10px; /* Reduced padding */
   border-radius: 20px;
-  margin-top: 10px;
+  margin-top: 6px;
   border: 1px solid #ff6f61;
   color: #ff6f61;
-  transition: all 0.3s ease;
   width: 100%; /* Ensures uniform button size */
 }
 
@@ -80,46 +75,46 @@
   border-color: #ff6f61;
 }
 
-/* Ensure Wishlist Button and Add to Cart Button are aligned */
-.card-body .wishlist-btn {
-  margin-top: 8px; /* Adjust spacing */
-  width: 100%; /* Ensures the wishlist button is the same width as the Add to Cart button */
+/* Hero Section Styling */
+.hero-section {
+  max-width: 70%; /* Further reduced width */
+  margin: 0 auto; /* Center the hero section */
+  text-align: center;
 }
 
-/* Sidebar Styling */
-.sidebar {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.hero-section img {
+  max-width: 70%; /* Smaller image width */
+  height: auto;
 }
 
-.sidebar h4 {
-  font-size: 1.2rem;
+.hero-section h1 {
+  font-size: 1.8rem; /* Smaller title */
   font-weight: bold;
-  color: #333;
-  margin-bottom: 1.5rem;
 }
 
-.sidebar .form-control {
-  padding: 0.8rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+.hero-section p {
+  font-size: 0.9rem; /* Smaller description text */
 }
 
-.sidebar .form-control:focus {
-  border-color: #007bff;
+.hero-section .btn {
+  font-size: 0.85rem; /* Smaller button text */
+  padding: 8px 16px;
 }
 
 /* Carousel Styles */
+.carousel-inner img {
+  object-fit: contain;
+  height: 200px; /* Further reduced height */
+}
+
+/* Carousel Caption */
 .carousel-caption {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.5rem; /* Reduced padding */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
-  max-width: 300px; /* Limit the width of the card */
+  max-width: 200px; /* Smaller max width */
   position: absolute;
   bottom: 20px;
   left: 23%;
@@ -127,38 +122,11 @@
 }
 
 .carousel-caption .btn {
-  font-size: 1rem;
-  padding: 10px 20px;
-  margin-top: 10px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-}
-
-.carousel-caption .btn:hover {
-  background-color: #0056b3;
+  font-size: 0.85rem; /* Smaller button size */
+  padding: 8px 16px;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   background-color: black !important;
-}
-
-.carousel-inner img {
-  object-fit: cover;
-  height: 400px;
-}
-
-/* Aligning Buttons in Carousel Items */
-.carousel-inner .carousel-item .carousel-caption {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-/* Ensure buttons in the carousel are aligned */
-.carousel-inner .carousel-item .carousel-caption .btn {
-  width: 100%;
-  margin-top: 10px;
 }
