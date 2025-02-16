@@ -94,7 +94,7 @@ const Home = () => {
                     <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
                     <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
                     {/* Wishlist Button Inside Carousel */}
-                    <Button variant="outline-danger" className="wishlist-btn ms-2" onClick={() => toggleWishlist(product)}>
+                    <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
                       {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
                     </Button>
                   </Card.Body>
