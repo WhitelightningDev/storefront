@@ -45,6 +45,11 @@ const CustomNavbar = () => {
               </Badge>
             )}
           </Nav.Link>
+
+          {/* Products Page Link */}
+          <Nav.Link as={Link} to="/products" className="products-link">
+            Products
+          </Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

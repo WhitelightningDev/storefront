@@ -1,0 +1,40 @@
+/* ProductsPage.css */
+.category-section {
+    margin-bottom: 30px;
+  }
+  
+  .category-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .product-card {
+    text-align: center;
+  }
+  
+  .product-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  .product-price {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+  
+  .wishlist-btn {
+    margin-bottom: 10px;
+  }
+  
+  .category-section .card-img {
+    height: 200px;
+    object-fit: contain;
+  }
+  
+  @media (max-width: 768px) {
+    .category-title {
+      font-size: 1.25rem;
+    }
+  }
+  
