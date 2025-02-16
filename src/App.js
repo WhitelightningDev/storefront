@@ -8,9 +8,13 @@ import { CartProvider } from './context/CartContext';
 import CustomNavbar from './components/Navbar'; // Import the Navbar
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import CheckoutPage from './pages/CheckoutPage'; // Checkout page component
+import { WishlistProvider } from './context/WishlistContext';
+import Wishlist from "./pages/Wishlist";  // Adjust the path if needed
+
 
 function App() {
   return (
+    <WishlistProvider>
     <CartProvider>
       <Router>
         <CustomNavbar /> {/* Add Navbar above the Routes */}
@@ -19,9 +23,11 @@ function App() {
           <Route path="/cart" element={<CartPage />} /> {/* Route for Cart page */}
           <Route path="/product/:id" element={<ProductDetails />} /> {/* Dynamic route for Product Details page */}
           <Route path="/checkout" element={<CheckoutPage />} /> {/* Route for Checkout page */}
+          <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </Router>
     </CartProvider>
+    </WishlistProvider>
   );
 }
 
