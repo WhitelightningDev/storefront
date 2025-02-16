@@ -39,13 +39,13 @@ const CartPage = () => {
                       Quantity: {product.quantity}
                     </p>
                   </Col>
-                  <Col xs={3} className="text-right">
+                  <Col xs={3} className="text-end">
                     <div className="quantity-controls">
                       <Button variant="outline-secondary" size="sm" onClick={() => removeFromCart(product.id)}>-</Button>
                       <span className="mx-2">{product.quantity}</span>
                       <Button variant="outline-primary" size="sm" onClick={() => addToCart(product)}>+</Button>
                     </div>
-                    <Button variant="outline-danger" size="sm" onClick={() => removeFromCart(product.id)}>
+                    <Button variant="outline-danger" size="sm" onClick={() => removeFromCart(product.id)} className="mt-2 w-100 btn-remove">
                       Remove
                     </Button>
                   </Col>
