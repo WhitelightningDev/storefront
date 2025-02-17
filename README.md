@@ -1,5 +1,8 @@
 # GoShop - E-Commerce Store
 
+![GoShop Logo](./public/goshoplogo-192x192.png)
+
+
 GoShop is an online shopping platform where users can browse and purchase products, view product details, manage their cart, and proceed to checkout. Built using **React**, **React-Bootstrap**, and **Fake Store API**, GoShop provides an easy-to-use and responsive platform to simulate a full shopping experience.
 
 ---
@@ -50,7 +53,7 @@ Before you begin, ensure you have the following installed on your machine:
 
 ### Installation
 
-1. Clone the repository to your local machine:
+1. To Clone the repository to your local machine:
    ```bash
    git clone https://github.com/your-username/e-commerce-store.git
    ```
