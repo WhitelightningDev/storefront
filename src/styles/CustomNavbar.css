@@ -9,28 +9,44 @@
 }
 
 .brand-logo img {
-  border-radius: 50%;
+  border-radius: 8px;
 }
 
 .brand-name {
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin-left: 10px;
+  color: #f8f9fa;
 }
 
-.cart-link {
-  position: relative;
-  font-size: 1.1rem;
+.nav-link {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #f8f9fa !important;
+  padding: 10px 15px;
   transition: color 0.3s ease;
 }
 
-.cart-link:hover {
-  color: #f8c146; /* Gold color for hover effect */
+.nav-link:hover {
+  color: #ffcc00 !important; /* Gold color for hover effect */
+}
+
+.nav-icon {
+  font-size: 1.3rem;
+  margin-right: 8px;
+}
+
+.badge-count {
+  font-size: 0.85rem;
+  margin-left: 5px;
+  padding: 5px 8px;
+  border-radius: 10px;
+  position: relative;
+  top: -3px;
 }
 
 .cart-badge {
-  font-size: 1rem;
-  margin-left: 5px;
   background-color: #f8c146;
   color: #333;
 }
