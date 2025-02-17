@@ -9,6 +9,7 @@ import { getCategories, getProductsByCategory } from "../services/api";
 import "../styles/Home.css";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { Link } from "react-router-dom";  // Import Link for navigation
 
 const Home = () => {
   const [productsByCategory, setProductsByCategory] = useState({});
@@ -107,7 +108,7 @@ const Home = () => {
       ) : error ? (
         // If there is an error, show the error message and a logo
         <div className="error-container d-flex flex-column align-items-center">
-          <img src="/goshoplogo-192x192.png" alt="Error Logo" className="error-logo mb-4" /> {/* Logo reference from public folder */}
+          <img src="/goshoplogo-192x192.png" alt="Error Logo" className="error-logo mb-4" />
           <Alert variant="danger" className="error-message">
             <h5>{error}</h5>
             <p>We encountered an issue while fetching data. Please try again later.</p>
@@ -143,6 +144,7 @@ const Home = () => {
                         <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
                           {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
                         </Button>
+                        <Link to={`/product/${product.id}`} className="btn btn-link">View Description</Link> {/* Added link */}
                       </Card.Body>
                     </Card>
                   </div>
@@ -194,6 +196,7 @@ const Home = () => {
                       <Button variant="primary" onClick={() => addToCart(product)}>
                         Add to Cart
                       </Button>
+                      <Link to={`/product/${product.id}`} className="btn btn-link">View Description</Link> {/* Added link */}
                     </Card.Body>
                   </Card>
                 </Col>
