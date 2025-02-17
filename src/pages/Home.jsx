@@ -116,50 +116,55 @@ const Home = () => {
         </div>
       ) : (
         <>
-          {/* Carousel for Best Sellers */}
-          <div id="myCarousel" className="carousel slide mb-4" data-bs-ride="carousel" data-aos="fade-up">
-            <div className="carousel-indicators">
-              {bestSellers.map((_, index) => (
-                <button
-                  type="button"
-                  data-bs-target="#myCarousel"
-                  data-bs-slide-to={index}
-                  className={index === 0 ? "active" : ""}
-                  aria-current={index === 0 ? "true" : "false"}
-                  aria-label={`Slide ${index + 1}`}
-                  key={index}
-                ></button>
-              ))}
+             {/* Carousel for Best Sellers */}
+      <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
+        <div className="carousel-indicators">
+          {bestSellers.map((_, index) => (
+            <button
+              type="button"
+              data-bs-target="#myCarousel"
+              data-bs-slide-to={index}
+              className={index === 0 ? "active" : ""}
+              aria-current={index === 0 ? "true" : "false"}
+              aria-label={`Slide ${index + 1}`}
+              key={index}
+            ></button>
+          ))}
+        </div>
+        <div className="carousel-inner">
+          {bestSellers.map((product, index) => (
+            <div key={product.id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
+              <img
+                className="d-block w-100"
+                src={product.image}
+                alt={product.title}
+                style={{ height: "400px", objectFit: "contain" }}
+              />
+              <div className="carousel-caption d-none d-md-block">
+                <Card className="shadow-sm">
+                  <Card.Body>
+                    <Card.Title>{product.title}</Card.Title>
+                    <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
+                    <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
+                    {/* Wishlist Button Inside Carousel */}
+                    <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
+                      {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </div>
             </div>
-            <div className="carousel-inner">
-              {bestSellers.map((product, index) => (
-                <div key={product.id} className={`carousel-item ${index === 0 ? "active" : ""}`} data-aos="fade-up">
-                  <img className="d-block w-100" src={product.image} alt={product.title} style={{ height: "340px", objectFit: "contain" }} />
-                  <div className="carousel-caption d-none d-md-block">
-                    <Card className="shadow-sm">
-                      <Card.Body>
-                        <Card.Title>{product.title}</Card.Title>
-                        <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
-                        <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
-                        <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
-                          {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
-                        </Button>
-                        <Link to={`/product/${product.id}`} className="btn btn-link">View Description</Link> {/* Added link */}
-                      </Card.Body>
-                    </Card>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span className="visually-hidden">Previous</span>
-            </button>
-            <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
-              <span className="visually-hidden">Next</span>
-            </button>
-          </div>
+          ))}
+        </div>
+        <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Previous</span>
+        </button>
+        <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Next</span>
+        </button>
+      </div>
 
           {/* Category Section */}
           <div className="category-dropdown mb-4" data-aos="fade-up">
