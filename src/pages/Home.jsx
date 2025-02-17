@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Button, Row, Col, Form, Container, Spinner } from "react-bootstrap";
+import { Card, Button, Row, Col, Form, Container, Spinner, Alert } from "react-bootstrap";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -16,7 +16,8 @@ const Home = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(""); // Add state for selected category
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [error, setError] = useState(""); // State for error handling
   const { addToCart } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Home = () => {
       duration: 1000,
       once: true,
       easing: "ease-in-out",
-      offset: 120, // Start fade effect when 120px of the element is visible
+      offset: 120,
     });
 
     window.addEventListener("resize", AOS.refresh);
@@ -35,8 +36,13 @@ const Home = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const data = await getCategories();
-      setCategories(data);
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (error) {
+        setError(error.message);  // Set error message if the API fails
+        setLoading(false);
+      }
     };
     fetchCategories();
   }, []);
@@ -44,12 +50,17 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       const productsData = {};
-      for (let category of categories) {
-        const products = await getProductsByCategory(category);
-        productsData[category] = products.slice(0, 3); // Limit to 3 products
+      try {
+        for (let category of categories) {
+          const products = await getProductsByCategory(category);
+          productsData[category] = products.slice(0, 3);  // Limit to 3 products
+        }
+        setProductsByCategory(productsData);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);  // Set error message if fetching products fails
+        setLoading(false);
       }
-      setProductsByCategory(productsData);
-      setLoading(false);
     };
 
     if (categories.length > 0) {
@@ -68,7 +79,6 @@ const Home = () => {
     setShowToast(true);
   };
 
-  // Filter products based on selected category
   const filteredProducts = selectedCategory
     ? productsByCategory[selectedCategory]
     : Object.values(productsByCategory).flat();
@@ -93,6 +103,15 @@ const Home = () => {
         <div className="d-flex flex-column align-items-center justify-content-center" style={{ height: "50vh" }}>
           <Spinner animation="border" role="status" />
           <p className="mt-3">Fetching products...</p>
+        </div>
+      ) : error ? (
+        // If there is an error, show the error message and a logo
+        <div className="error-container d-flex flex-column align-items-center">
+          <img src="/goshoplogo-192x192.png" alt="Error Logo" className="error-logo mb-4" /> {/* Logo reference from public folder */}
+          <Alert variant="danger" className="error-message">
+            <h5>{error}</h5>
+            <p>We encountered an issue while fetching data. Please try again later.</p>
+          </Alert>
         </div>
       ) : (
         <>
@@ -155,36 +174,29 @@ const Home = () => {
             </Form.Group>
           </div>
 
-          {/* Product Cards */}
+          {/* Product Cards Section */}
           <Container fluid>
             <Row>
-              {categories.map((category) => (
-                <div key={category} className="category-section" data-aos="fade-up">
-                  <h3>{category.charAt(0).toUpperCase() + category.slice(1)}</h3>
-                  <Row>
-                    {productsByCategory[category]?.map((product) => (
-                      <Col key={product.id} md={4} sm={6} xs={12} className="mb-4 mt-3">
-                        <Card className="product-card shadow-sm" data-aos="zoom-in">
-                          <Card.Img className="card-img" variant="top" src={product.image} />
-                          <Card.Body className="d-flex flex-column">
-                            <Card.Title className="product-title">{product.title}</Card.Title>
-                            <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
-                            <Button
-                              variant="outline-danger"
-                              className="wishlist-btn"
-                              onClick={() => toggleWishlist(product)}
-                            >
-                              {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
-                            </Button>
-                            <Button variant="primary" onClick={() => addToCart(product)}>
-                              Add to Cart
-                            </Button>
-                          </Card.Body>
-                        </Card>
-                      </Col>
-                    ))}
-                  </Row>
-                </div>
+              {filteredProducts.map((product) => (
+                <Col key={product.id} md={4} sm={6} xs={12} className="mb-4 mt-3" data-aos="fade-up">
+                  <Card className="product-card shadow-sm">
+                    <Card.Img className="card-img" variant="top" src={product.image} />
+                    <Card.Body className="d-flex flex-column">
+                      <Card.Title className="product-title">{product.title}</Card.Title>
+                      <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
+                      <Button
+                        variant="outline-danger"
+                        className="wishlist-btn"
+                        onClick={() => toggleWishlist(product)}
+                      >
+                        {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
+                      </Button>
+                      <Button variant="primary" onClick={() => addToCart(product)}>
+                        Add to Cart
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
               ))}
             </Row>
           </Container>
