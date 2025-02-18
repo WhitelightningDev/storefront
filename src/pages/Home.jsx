@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, Button, Row, Col, Form, Container, Spinner, Alert } from "react-bootstrap";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -10,99 +9,144 @@ import ProductOptionPopup from "../components/ProductOptionPopup"; // Import the
 import "../styles/Home.css";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { Link } from "react-router-dom";  // Import Link for navigation
+import { Link } from "react-router-dom";
 
+/**
+ * Home component - Displays products, categories, and wishlist options on the homepage.
+ * Handles product filtering by category and pop-up for selecting product options before adding to cart.
+ */
 const Home = () => {
-  const [productsByCategory, setProductsByCategory] = useState({});
-  const [categories, setCategories] = useState([]);
-  const [toastMessage, setToastMessage] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [showToast, setShowToast] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [error, setError] = useState(""); // State for error handling
-  const [selectedProduct, setSelectedProduct] = useState(null); // State for product pop-up
-  const { addToCart } = useCart();
-  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
-  const navigate = useNavigate();
+  const [productsByCategory, setProductsByCategory] = useState({}); // Stores products by category
+  const [categories, setCategories] = useState([]); // Stores available categories
+  const [toastMessage, setToastMessage] = useState(""); // Stores message for toast notifications
+  const [loading, setLoading] = useState(true); // Indicates loading state for fetching products
+  const [showToast, setShowToast] = useState(false); // Controls visibility of toast notification
+  const [selectedCategory, setSelectedCategory] = useState(""); // Stores the selected category filter
+  const [error, setError] = useState(""); // Stores error message for failed fetch
+  const [selectedProduct, setSelectedProduct] = useState(null); // Stores selected product for pop-up
+  const { addToCart } = useCart(); // Function to add products to the cart
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist(); // Wishlist functions
+  // Navigation hook for routing
 
+  /**
+   * Initializes AOS (Animate on Scroll) library for animations and refreshes on resize.
+   */
   useEffect(() => {
     AOS.init({ duration: 1000, once: true, easing: "ease-in-out", offset: 120 });
     window.addEventListener("resize", AOS.refresh);
     return () => window.removeEventListener("resize", AOS.refresh);
   }, []);
 
+  /**
+   * Fetches categories from the API when the component is mounted.
+   */
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const data = await getCategories();
-        setCategories(data);
+        setCategories(data); // Set categories to state
       } catch (error) {
-        setError(error.message);
-        setLoading(false);
+        setError(error.message); // Set error message on failure
+        setLoading(false); // End loading on error
       }
     };
     fetchCategories();
   }, []);
 
+  /**
+   * Fetches products by category after categories are loaded.
+   * Limits the number of products displayed to 3 per category.
+   */
   useEffect(() => {
     const fetchProducts = async () => {
       const productsData = {};
       try {
         for (let category of categories) {
           const products = await getProductsByCategory(category);
-          productsData[category] = products.slice(0, 3);
+          productsData[category] = products.slice(0, 3); // Limit to first 3 products
         }
-        setProductsByCategory(productsData);
-        setLoading(false);
+        setProductsByCategory(productsData); // Set products by category to state
+        setLoading(false); // End loading when products are fetched
       } catch (error) {
-        setError(error.message);
-        setLoading(false);
+        setError(error.message); // Set error message on failure
+        setLoading(false); // End loading on error
       }
     };
 
     if (categories.length > 0) {
-      fetchProducts();
+      fetchProducts(); // Fetch products once categories are available
     }
   }, [categories]);
 
+  /**
+   * Toggles the wishlist state for a given product.
+   * Adds or removes product from wishlist and shows a toast message.
+   * 
+   * @param {Object} product - The product to be added/removed from the wishlist.
+   */
   const toggleWishlist = (product) => {
     if (wishlist.some((item) => item.id === product.id)) {
-      removeFromWishlist(product.id);
+      removeFromWishlist(product.id); // Remove product if already in wishlist
       setToastMessage(`${product.title} removed from wishlist`);
     } else {
-      addToWishlist(product);
+      addToWishlist(product); // Add product to wishlist
       setToastMessage(`${product.title} added to wishlist`);
     }
-    setShowToast(true);
+    setShowToast(true); // Display toast notification
   };
 
+  /**
+   * Handles adding a product to the cart.
+   * If the product requires options (e.g., size, color), it triggers the product option pop-up.
+   * Otherwise, the product is added directly to the cart.
+   * 
+   * @param {Object} product - The product to be added to the cart.
+   */
   const handleAddToCart = (product) => {
     if (product.category.includes("clothing") || product.category.includes("jewelery") || product.category.includes("electronics")) {
-      setSelectedProduct(product);
+      setSelectedProduct(product); // Set selected product for pop-up
     } else {
-      addToCart(product);
+      addToCart(product); // Add directly to cart
     }
   };
 
+  /**
+   * Confirms the selected options (e.g., size, color) and adds the product to the cart.
+   * 
+   * @param {Object} options - The selected options for the product.
+   */
   const handleConfirmOptions = (options) => {
-    addToCart({ ...selectedProduct, options });
-    setSelectedProduct(null);
+    addToCart({ ...selectedProduct, options }); // Add product with options to the cart
+    setSelectedProduct(null); // Close the pop-up
   };
 
+  /**
+   * Filters the displayed products based on the selected category.
+   */
   const filteredProducts = selectedCategory
-    ? productsByCategory[selectedCategory]
-    : Object.values(productsByCategory).flat();
+    ? productsByCategory[selectedCategory] // Filter by selected category
+    : Object.values(productsByCategory).flat(); // Flatten the products if no category is selected
 
-  const bestSellers = filteredProducts.slice(0, 5);
+  const bestSellers = filteredProducts.slice(0, 5); // Get top 5 best sellers
 
+  /**
+   * Handles category selection change.
+   * 
+   * @param {Event} e - The event triggered by category selection change.
+   */
   const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
+    setSelectedCategory(e.target.value); // Update selected category state
   };
 
   return (
     <Container className="mt-4">
       {/* Product Option Pop-up */}
-      <ProductOptionPopup show={!!selectedProduct} product={selectedProduct} onClose={() => setSelectedProduct(null)} onConfirm={handleConfirmOptions} />
+      <ProductOptionPopup 
+        show={!!selectedProduct} 
+        product={selectedProduct} 
+        onClose={() => setSelectedProduct(null)} 
+        onConfirm={handleConfirmOptions} 
+      />
 
       {/* Toast Notification */}
       <ToastService message={toastMessage} show={showToast} onClose={() => setShowToast(false)} bg="success" />

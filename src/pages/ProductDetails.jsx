@@ -4,23 +4,27 @@ import { Container, Row, Col, Card, Button, Modal, ListGroup, Form } from 'react
 import { useCart } from '../context/CartContext';
 import '../styles/ProductDetails.css';
 
+/**
+ * ProductDetails component - Displays detailed information about a specific product,
+ * allows users to select options (e.g., size, color), and add the product to the cart.
+ */
 const ProductDetails = () => {
-  const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const { addToCart } = useCart();
+  const { id } = useParams(); // Fetch product ID from the URL parameters
+  const [product, setProduct] = useState(null); // Stores product details fetched from API
+  const { addToCart } = useCart(); // Function to add products to the cart
 
-  // Modal state for additional details
+  // Modal state for additional product details
   const [showDetails, setShowDetails] = useState(false);
 
-  // State for selected color, size, and other product-specific options
+  // State for selected options (color, size, etc.) specific to the product category
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedStorage, setSelectedStorage] = useState('');
   const [selectedMetal, setSelectedMetal] = useState('');
   const [selectedRingSize, setSelectedRingSize] = useState('');
-  const [selectedGender, setSelectedGender] = useState(''); // New state for gender selection
+  const [selectedGender, setSelectedGender] = useState(''); // State for gender selection (applicable to clothing)
 
-  // Available options for dropdowns
+  // Available options for dropdowns based on product category
   const availableColors = ['Red', 'Blue', 'Black', 'White', 'Green'];
   const availableSizesMen = ['S', 'M', 'L', 'XL', 'XXL'];
   const availableSizesWomen = ['XS', 'S', 'M', 'L', 'XL'];
@@ -28,21 +32,27 @@ const ProductDetails = () => {
   const availableMetals = ['White Gold', 'Yellow Gold', 'Rose Gold'];
   const availableRingSizes = ['5', '6', '7', '8', '9'];
 
+  /**
+   * Fetches the product details from the API when the component is mounted.
+   */
   useEffect(() => {
-    // Fetch product details
     const fetchProductDetails = async () => {
       const response = await fetch(`https://fakestoreapi.com/products/${id}`);
       const data = await response.json();
-      setProduct(data);
+      setProduct(data); // Sets product details to the state
     };
 
     fetchProductDetails();
-  }, [id]);
+  }, [id]); // Re-fetch if product ID changes
 
+  /**
+   * Handles adding the product to the cart with the selected options.
+   * It validates whether the user has selected all required options based on the product category.
+   */
   const handleAddToCart = () => {
     let productWithSelection = { ...product };
 
-    // Add the selections based on category
+    // Validate selections based on product category
     if (product.category === 'clothing') {
       if (!selectedColor || !selectedSize || !selectedGender) {
         alert('Please select a color, size, and gender before adding to cart.');
@@ -63,11 +73,11 @@ const ProductDetails = () => {
       productWithSelection = { ...productWithSelection, selectedMetal, selectedRingSize };
     }
 
-    addToCart(productWithSelection);
+    addToCart(productWithSelection); // Adds the product with selected options to the cart
   };
 
   if (!product) {
-    return <p>Loading product details...</p>;
+    return <p>Loading product details...</p>; // Display loading message if product is not yet fetched
   }
 
   return (
@@ -114,10 +124,10 @@ const ProductDetails = () => {
             <ListGroup.Item><strong>Category:</strong> {product.category}</ListGroup.Item>
             <ListGroup.Item><strong>Stock:</strong> {Math.floor(Math.random() * 50) + 1} available</ListGroup.Item>
 
-            {/* Conditional Dropdowns based on Category */}
+            {/* Conditional Dropdowns based on Product Category */}
             {product.category === 'clothing' && (
               <>
-                {/* Gender Selection */}
+                {/* Gender Selection (Men's or Women's Clothing) */}
                 <ListGroup.Item>
                   <Form.Group>
                     <Form.Label><strong>Select Gender:</strong></Form.Label>
@@ -177,6 +187,7 @@ const ProductDetails = () => {
 
             {product.category === 'electronics' && (
               <>
+                {/* Storage Selection for Electronics */}
                 <ListGroup.Item>
                   <Form.Group>
                     <Form.Label><strong>Select Storage Size:</strong></Form.Label>
@@ -199,6 +210,7 @@ const ProductDetails = () => {
 
             {product.category === 'jewelery' && (
               <>
+                {/* Metal Type Selection for Jewelry */}
                 <ListGroup.Item>
                   <Form.Group>
                     <Form.Label><strong>Select Metal Type:</strong></Form.Label>
@@ -217,6 +229,7 @@ const ProductDetails = () => {
                   </Form.Group>
                 </ListGroup.Item>
 
+                {/* Ring Size Selection for Jewelry */}
                 <ListGroup.Item>
                   <Form.Group>
                     <Form.Label><strong>Select Ring Size:</strong></Form.Label>

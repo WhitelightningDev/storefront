@@ -11,7 +11,7 @@ const CheckoutPage = () => {
 
   // Calculate total price
   const totalAmount = cart
-    .reduce((acc, product) => acc + product.price, 0)
+    .reduce((acc, product) => acc + product.price * product.quantity, 0)
     .toFixed(2);
 
   const handleConfirmOrder = () => {
@@ -85,12 +85,20 @@ const CheckoutPage = () => {
                     <p className="checkout-item-price">
                       ${product.price.toFixed(2)}
                     </p>
+                    {/* Display the selected options */}
+                    {product.options && (
+                      <ul>
+                        {Object.entries(product.options).map(([key, value]) => (
+                          <li key={key}>{`${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`}</li>
+                        ))}
+                      </ul>
+                    )}
                   </Col>
                   <Col xs={3} className="text-right">
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      onClick={() => removeFromCart(product.id)}
+                      onClick={() => removeFromCart(product.id, product.options)} // Pass id and options
                     >
                       Remove
                     </Button>
