@@ -19,10 +19,15 @@ export const CartProvider = ({ children }) => {
   // Add item to cart (increase quantity if item already exists)
   const addToCart = (product) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id);
+      const existingItem = prevCart.find(
+        (item) =>
+          item.id === product.id &&
+          JSON.stringify(item.options) === JSON.stringify(product.options) // Check if the options are the same
+      );
+
       if (existingItem) {
         return prevCart.map((item) =>
-          item.id === product.id
+          item.id === product.id && JSON.stringify(item.options) === JSON.stringify(product.options)
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -33,15 +38,24 @@ export const CartProvider = ({ children }) => {
   };
 
   // Remove item from cart (decrease quantity if more than 1, remove if only 1)
-  const removeFromCart = (id) => {
+  const removeFromCart = (id, options) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === id);
+      const existingItem = prevCart.find(
+        (item) =>
+          item.id === id &&
+          JSON.stringify(item.options) === JSON.stringify(options)
+      );
       if (existingItem && existingItem.quantity > 1) {
         return prevCart.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          item.id === id && JSON.stringify(item.options) === JSON.stringify(options)
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
         );
       } else {
-        return prevCart.filter((item) => item.id !== id);
+        return prevCart.filter(
+          (item) =>
+            !(item.id === id && JSON.stringify(item.options) === JSON.stringify(options))
+        );
       }
     });
   };

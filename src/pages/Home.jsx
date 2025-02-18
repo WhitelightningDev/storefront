@@ -6,6 +6,7 @@ import { useWishlist } from "../context/WishlistContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ToastService from "../services/ToastService";
 import { getCategories, getProductsByCategory } from "../services/api";
+import ProductOptionPopup from "../components/ProductOptionPopup"; // Import the popup
 import "../styles/Home.css";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -19,18 +20,13 @@ const Home = () => {
   const [showToast, setShowToast] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [error, setError] = useState(""); // State for error handling
+  const [selectedProduct, setSelectedProduct] = useState(null); // State for product pop-up
   const { addToCart } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const navigate = useNavigate();
 
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: "ease-in-out",
-      offset: 120,
-    });
-
+    AOS.init({ duration: 1000, once: true, easing: "ease-in-out", offset: 120 });
     window.addEventListener("resize", AOS.refresh);
     return () => window.removeEventListener("resize", AOS.refresh);
   }, []);
@@ -41,7 +37,7 @@ const Home = () => {
         const data = await getCategories();
         setCategories(data);
       } catch (error) {
-        setError(error.message);  // Set error message if the API fails
+        setError(error.message);
         setLoading(false);
       }
     };
@@ -54,12 +50,12 @@ const Home = () => {
       try {
         for (let category of categories) {
           const products = await getProductsByCategory(category);
-          productsData[category] = products.slice(0, 3);  // Limit to 3 products
+          productsData[category] = products.slice(0, 3);
         }
         setProductsByCategory(productsData);
         setLoading(false);
       } catch (error) {
-        setError(error.message);  // Set error message if fetching products fails
+        setError(error.message);
         setLoading(false);
       }
     };
@@ -80,6 +76,19 @@ const Home = () => {
     setShowToast(true);
   };
 
+  const handleAddToCart = (product) => {
+    if (product.category.includes("clothing") || product.category.includes("jewelery") || product.category.includes("electronics")) {
+      setSelectedProduct(product);
+    } else {
+      addToCart(product);
+    }
+  };
+
+  const handleConfirmOptions = (options) => {
+    addToCart({ ...selectedProduct, options });
+    setSelectedProduct(null);
+  };
+
   const filteredProducts = selectedCategory
     ? productsByCategory[selectedCategory]
     : Object.values(productsByCategory).flat();
@@ -92,13 +101,11 @@ const Home = () => {
 
   return (
     <Container className="mt-4">
+      {/* Product Option Pop-up */}
+      <ProductOptionPopup show={!!selectedProduct} product={selectedProduct} onClose={() => setSelectedProduct(null)} onConfirm={handleConfirmOptions} />
+
       {/* Toast Notification */}
-      <ToastService
-        message={toastMessage}
-        show={showToast}
-        onClose={() => setShowToast(false)}
-        bg="success"
-      />
+      <ToastService message={toastMessage} show={showToast} onClose={() => setShowToast(false)} bg="success" />
 
       {loading ? (
         <div className="d-flex flex-column align-items-center justify-content-center" style={{ height: "50vh" }}>
@@ -106,7 +113,6 @@ const Home = () => {
           <p className="mt-3">Fetching products...</p>
         </div>
       ) : error ? (
-        // If there is an error, show the error message and a logo
         <div className="error-container d-flex flex-column align-items-center">
           <img src="/goshoplogo-192x192.png" alt="Error Logo" className="error-logo mb-4" />
           <Alert variant="danger" className="error-message">
@@ -116,55 +122,33 @@ const Home = () => {
         </div>
       ) : (
         <>
-             {/* Carousel for Best Sellers */}
-      <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
-        <div className="carousel-indicators">
-          {bestSellers.map((_, index) => (
-            <button
-              type="button"
-              data-bs-target="#myCarousel"
-              data-bs-slide-to={index}
-              className={index === 0 ? "active" : ""}
-              aria-current={index === 0 ? "true" : "false"}
-              aria-label={`Slide ${index + 1}`}
-              key={index}
-            ></button>
-          ))}
-        </div>
-        <div className="carousel-inner">
-          {bestSellers.map((product, index) => (
-            <div key={product.id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-              <img
-                className="d-block w-100"
-                src={product.image}
-                alt={product.title}
-                style={{ height: "400px", objectFit: "contain" }}
-              />
-              <div className="carousel-caption d-none d-md-block">
-                <Card className="shadow-sm">
-                  <Card.Body>
-                    <Card.Title>{product.title}</Card.Title>
-                    <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
-                    <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
-                    {/* Wishlist Button Inside Carousel */}
-                    <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
-                      {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </div>
+          {/* Carousel for Best Sellers */}
+          <div id="myCarousel" className="carousel slide mb-6" data-bs-ride="carousel">
+            <div className="carousel-indicators">
+              {bestSellers.map((_, index) => (
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to={index} className={index === 0 ? "active" : ""} aria-current={index === 0 ? "true" : "false"} aria-label={`Slide ${index + 1}`} key={index}></button>
+              ))}
             </div>
-          ))}
-        </div>
-        <button className="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Previous</span>
-        </button>
-        <button className="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
-        </button>
-      </div>
+            <div className="carousel-inner">
+              {bestSellers.map((product, index) => (
+                <div key={product.id} className={`carousel-item ${index === 4 ? "active" : ""}`}>
+                  <img className="d-block w-100" src={product.image} alt={product.title} style={{ height: "400px", objectFit: "contain" }} />
+                  <div className="carousel-caption d-none d-md-block">
+                    <Card className="shadow-sm">
+                      <Card.Body>
+                        <Card.Title>{product.title}</Card.Title>
+                        <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
+                        <Button variant="primary" onClick={() => handleAddToCart(product)}>Add to Cart</Button>
+                        <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
+                          {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Category Section */}
           <div className="category-dropdown mb-4" data-aos="fade-up">
@@ -173,9 +157,7 @@ const Home = () => {
               <Form.Control as="select" onChange={handleCategoryChange} value={selectedCategory}>
                 <option value="">All Categories</option>
                 {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </option>
+                  <option key={category} value={category}>{category.charAt(0).toUpperCase() + category.slice(1)}</option>
                 ))}
               </Form.Control>
             </Form.Group>
@@ -191,17 +173,11 @@ const Home = () => {
                     <Card.Body className="d-flex flex-column">
                       <Card.Title className="product-title">{product.title}</Card.Title>
                       <Card.Text className="product-price">${product.price.toFixed(2)}</Card.Text>
-                      <Button
-                        variant="outline-danger"
-                        className="wishlist-btn"
-                        onClick={() => toggleWishlist(product)}
-                      >
+                      <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
                         {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
                       </Button>
-                      <Button variant="primary" onClick={() => addToCart(product)}>
-                        Add to Cart
-                      </Button>
-                      <Link to={`/product/${product.id}`} className="btn btn-link">View Description</Link> {/* Added link */}
+                      <Button variant="primary" onClick={() => handleAddToCart(product)}>Add to Cart</Button>
+                      <Link to={`/product/${product.id}`} className="btn btn-link">View Description</Link>
                     </Card.Body>
                   </Card>
                 </Col>

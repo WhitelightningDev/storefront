@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
-
+import { Container, Row, Col, Card, Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { getAllProducts, getCategories } from "../services/api"; // Import API calls
 import "../styles/ProductsPage.css"; // Custom CSS file for Products Page
+import ProductOptionPopup from '../components/ProductOptionPopup'; // Import the Product Option Popup
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState({});
+  
   const { addToCart } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
-
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -39,6 +42,28 @@ const ProductsPage = () => {
     }
   };
 
+  const handleAddToCartClick = (product) => {
+    setSelectedProduct(product);
+    setShowPopup(true); // Show the popup to select options
+  };
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+    setSelectedOptions({});
+  };
+
+  const handleOptionChange = (optionType, value) => {
+    setSelectedOptions((prevOptions) => ({
+      ...prevOptions,
+      [optionType]: value,
+    }));
+  };
+
+  const handleAddToCartWithOptions = () => {
+    addToCart({ ...selectedProduct, options: selectedOptions });
+    handlePopupClose(); // Close popup after adding to cart
+  };
+
   return (
     <Container className="mt-4">
       <h2 className="text-center mb-4">Our Products</h2>
@@ -57,7 +82,7 @@ const ProductsPage = () => {
                     <Button variant="outline-danger" className="wishlist-btn" onClick={() => toggleWishlist(product)}>
                       {wishlist.some((item) => item.id === product.id) ? <FaHeart /> : <FaRegHeart />} Wishlist
                     </Button>
-                    <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
+                    <Button variant="primary" onClick={() => handleAddToCartClick(product)}>Add to Cart</Button>
                     <Link to={`/product/${product.id}`} className="btn btn-link">View Description</Link>
                   </Card.Body>
                 </Card>
@@ -66,6 +91,14 @@ const ProductsPage = () => {
           </Row>
         </div>
       ))}
+
+      {/* Product Option Popup */}
+      <ProductOptionPopup 
+        show={showPopup} 
+        product={selectedProduct} 
+        onClose={handlePopupClose} 
+        onConfirm={handleAddToCartWithOptions} 
+      />
     </Container>
   );
 };
