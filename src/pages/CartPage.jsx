@@ -1,8 +1,8 @@
-import React from 'react';
-import { useCart } from '../context/CartContext';
-import { Card, Button, Row, Col, Image } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import '../styles/CartPage.css'; // Ensure you create this CSS file
+import React from "react";
+import { useCart } from "../context/CartContext";
+import { Card, Button, Row, Col, Image } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import "../styles/CartPage.css"; // Ensure you create this CSS file
 
 /**
  * CartPage component displays the user's shopping cart.
@@ -28,7 +28,9 @@ const CartPage = () => {
         <div className="empty-cart">
           <h4>Your cart is empty.</h4>
           <p>Start adding products to your cart.</p>
-          <Link to="/" className="btn btn-primary mt-3">Continue Shopping</Link>
+          <Link to="/" className="btn btn-primary mt-3">
+            Continue Shopping
+          </Link>
         </div>
       ) : (
         <Row>
@@ -39,19 +41,28 @@ const CartPage = () => {
                 <Row className="align-items-center">
                   {/* Product Image */}
                   <Col xs={3}>
-                    <Image src={product.image} alt={product.title} fluid className="cart-item-img" />
+                    <Image
+                      src={product.image}
+                      alt={product.title}
+                      fluid
+                      className="cart-item-img"
+                    />
                   </Col>
 
                   {/* Product Details */}
                   <Col xs={6}>
                     <h5 className="cart-item-title">{product.title}</h5>
-                    <p className="cart-item-price">${product.price.toFixed(2)}</p>
+                    <p className="cart-item-price">
+                      ${product.price.toFixed(2)}
+                    </p>
 
                     {/* Display the selected options for this product (if any) */}
                     {product.options && (
                       <ul>
                         {Object.entries(product.options).map(([key, value]) => (
-                          <li key={key}>{`${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`}</li>
+                          <li key={key}>{`${
+                            key.charAt(0).toUpperCase() + key.slice(1)
+                          }: ${value}`}</li>
                         ))}
                       </ul>
                     )}
@@ -64,29 +75,33 @@ const CartPage = () => {
                   <Col xs={3} className="text-end">
                     <div className="quantity-controls">
                       {/* Decrease Quantity Button */}
-                      <Button 
-                        variant="outline-secondary" 
-                        size="sm" 
-                        onClick={() => removeFromCart(product.id, product.options)} // Pass id and options to remove product
+                      <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={() =>
+                          removeFromCart(product.id, product.options)
+                        } // Pass id and options to remove product
                       >
                         -
                       </Button>
                       <span className="mx-2">{product.quantity}</span>
                       {/* Increase Quantity Button */}
-                      <Button 
-                        variant="outline-primary" 
-                        size="sm" 
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
                         onClick={() => addToCart(product)} // Pass the whole product to add to cart
                       >
                         +
                       </Button>
                     </div>
                     {/* Remove Product Button */}
-                    <Button 
-                      variant="outline-danger" 
-                      size="sm" 
-                      onClick={() => removeFromCart(product.id, product.options)} // Pass id and options to remove product
-                      className="mt-2 w-100 btn-remove"
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() =>
+                        removeFromCart(product.id, product.options)
+                      } // Pass id and options to remove product
+                      className="mt-2 btn-remove w-100"
                     >
                       Remove
                     </Button>
@@ -108,23 +123,27 @@ const CartPage = () => {
                 </div>
                 <div className="summary-item">
                   <span>Shipping:</span>
-                  <span>Free</span> {/* Static text for shipping, can be dynamic based on cart */}
+                  <span>Free</span>{" "}
+                  {/* Static text for shipping, can be dynamic based on cart */}
                 </div>
                 <hr />
                 <div className="summary-total">
                   <span>Total:</span>
-                  <span>${totalAmount}</span> {/* Total amount displayed here */}
+                  <span>${totalAmount}</span>{" "}
+                  {/* Total amount displayed here */}
                 </div>
 
                 {/* Continue Shopping and Proceed to Checkout Buttons */}
                 <div className="summary-buttons">
                   <Link to="/">
-                    <Button variant="secondary" className="back-button">Continue Shopping</Button>
+                    <Button variant="secondary" className="back-button">
+                      Continue Shopping
+                    </Button>
                   </Link>
                   <Link to="/checkout">
-                    <Button 
-                      variant="primary" 
-                      className="checkout-button" 
+                    <Button
+                      variant="primary"
+                      className="checkout-button"
                       disabled={cart.length === 0} // Disable checkout if cart is empty
                     >
                       Proceed to Checkout

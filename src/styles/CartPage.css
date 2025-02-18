@@ -166,14 +166,18 @@
   border-radius: 50%;
 }
 
+/* Remove Button */
 .btn-remove {
   background-color: #ff4d4d;
   color: white;
   margin-top: 15px;
-  width: 100%;
+  width: 100%;  /* Ensure the button takes full width */
   padding: 10px;
   font-weight: bold;
   border-radius: 8px;
+  white-space: nowrap;  /* Prevent text from wrapping */
+  text-overflow: ellipsis;  /* Add ellipsis if text overflows */
+  transition: background-color 0.3s ease;
 }
 
 .btn-remove:hover {
@@ -213,6 +217,18 @@
 
   .summary-title {
     font-size: 1.5rem;
+  }
+
+  /* Ensure Remove button scales well on smaller screens */
+  .btn-remove {
+    width: 100%;  /* Ensures button takes full width */
+  }
+}
+
+@media (min-width: 769px) {
+  /* Adjust Remove button width for larger screens */
+  .btn-remove {
+    width: auto;  /* Reset width to auto for larger screens */
   }
 }
 
