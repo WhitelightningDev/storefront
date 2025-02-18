@@ -173,7 +173,7 @@
   margin-top: 15px;
   width: 100%;  /* Ensure the button takes full width */
   padding: 10px;
-  font-weight: bold;
+  font-size: 12px;
   border-radius: 8px;
   white-space: nowrap;  /* Prevent text from wrapping */
   text-overflow: ellipsis;  /* Add ellipsis if text overflows */
