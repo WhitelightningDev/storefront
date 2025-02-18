@@ -11,6 +11,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import CheckoutPage from './pages/CheckoutPage'; // Checkout page component
 import { WishlistProvider } from './context/WishlistContext';
 import Wishlist from './pages/Wishlist';  // Adjust the path if needed
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/wishlist" element={<Wishlist />} /> {/* Route for Wishlist page */}
             <Route path="/products" element={<ProductsPage />} /> {/* Route for Products page */}
           </Routes>
+          <SpeedInsights />
         </Router>
       </CartProvider>
     </WishlistProvider>
